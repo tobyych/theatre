@@ -1,0 +1,27 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/parser": "^4.20.0",
+    "eslint": "^7.23.0",
+    "eslint-plugin-react": "^7.23.1",
+    "lerna": "^4.0.0"
+  },
+  "scripts": {
+    "ios": "lerna --scope=mobile run ios",
+    "android": "lerna --scope=mobile run android",
+    "expo": "lerna --scope=mobile run start",
+    "web": "lerna --scope=web run start",
+    "postinstall": "cd ./packages/mobile && expo-yarn-workspaces postinstall && cd ../../ && lerna bootstrap"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/expo",
+      "**/expo/**"
+    ]
+  }
+}
