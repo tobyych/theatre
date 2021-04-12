@@ -1,0 +1,10 @@
+.chat-window {
+  position: absolute;
+  right: 60px;
+  bottom: 0px;
+  margin-bottom: 0em;
+}
+
+.message-list ul {
+  overflow: scroll;
+}

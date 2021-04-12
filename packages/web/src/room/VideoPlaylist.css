@@ -1,0 +1,40 @@
+.playlist-item {
+  position: relative;
+  display: flex;
+  padding: 0 0;
+  background-color: #fff;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 100%;
+}
+
+.playlist-item-text {
+  order: 1;
+  width: 100%;
+  margin: 0 0 0 1.25rem;
+} 
+
+.btn.playlist-item-button {
+  width: 60px;
+  border-radius: 0px;
+}
+
+
+.playlist-item-input {
+  flex: 1 1 auto;
+  padding: .375rem .75rem;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  border: 1px solid #ced4da;
+  border-radius: 0px;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.playlist-item-append {
+  order: 2;
+  margin-left: -1px;
+  display: flex;
+}
