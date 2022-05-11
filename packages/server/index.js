@@ -11,7 +11,7 @@ io.sockets.on("connection", (socket) => {
 
   socket.on("joinRoom", (roomToken) => {
     socket.join(roomToken);
-    io.sockets.to(roomToken).emit(`Welcome to room ${roomToken}`);
+    io.sockets.to(roomToken).emit('joinRoomStatus', roomToken, true);
     console.log(`client ${socket.id} has joined room ${roomToken}`);
   });
 
@@ -23,8 +23,8 @@ io.sockets.on("connection", (socket) => {
     io.sockets.to(roomToken).emit('videoControl', isPlay);
   });
 
-  socket.on("addToPlaylist", (roomToken, playlistItem) => {
-    io.sockets.to(roomToken).emit("addToPlaylist", playlistItem);
+  socket.on("addToPlaylist", (roomToken, videoId) => {
+    io.sockets.to(roomToken).emit("addToPlaylist", videoId);
   });
 
   socket.on("sendVideoToScreen", (roomToken, videoId) => {

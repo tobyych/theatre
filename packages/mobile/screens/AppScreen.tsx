@@ -10,6 +10,7 @@ import { VideoPlaylist } from '../components/app/VideoPlaylist';
 import { useState, useContext } from 'react';
 
 import { SocketContext } from '../contexts/SocketContext';
+import { RoomContext } from '../contexts/RoomContext';
 
 
 export default function AppScreen(): JSX.Element {
@@ -17,8 +18,20 @@ export default function AppScreen(): JSX.Element {
   const [currentVideoId, setCurrentVideoId] = useState<string>('W5QV32_zMfs');
   const [key, setKey] = useState<number | null>(null);
   const socket = useContext(SocketContext);
-  
+  const { roomToken } = useContext(RoomContext);
 
+  const connectedRooms: { [key: string]: boolean } = {};
+
+  socket.on('joinRoomStatus', (roomToken, success) => {
+    connectedRooms[roomToken] = success;
+  });
+
+  if (roomToken) {
+    if (!connectedRooms[roomToken]) {
+      socket.emit('joinRoom', roomToken);
+    }
+  }
+  
   const toggleChat = (): void => {
     setDisplayChat(!displayChat);
   };

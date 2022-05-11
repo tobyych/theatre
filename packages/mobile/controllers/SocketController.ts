@@ -6,8 +6,8 @@ export const createSocket = (): Socket => {
   return io();
 };
 
-export const sendMessage = (message: string, socket: Socket): void => {
-  socket.emit('chatMessage', message);
+export const sendMessage = (socket: Socket, roomToken: string | undefined, message: string): void => {
+  socket.emit('roomChat', roomToken, message);
 };
 
 export const sendPlayVideoSignal = (socket: Socket, roomToken: string): void => {

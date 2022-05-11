@@ -12,14 +12,24 @@ import { v4 as uuid } from 'uuid';
 
 import { SocketContext } from '../../contexts/SocketContext';
 import { sendMessage } from '../../controllers/SocketController';
+import { RoomContext } from '../../contexts/RoomContext';
 
 const MESSAGE_BLOCK_WIDTH = Dimensions.get('window').width * 0.7;
 
 export const ChatWindow = () : JSX.Element => { 
   const socket = useContext(SocketContext);
+  const { roomToken } = useContext(RoomContext);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedId] = useState(null);
+
+  socket.on('chatMessage', (message) => {
+    setMessages([{
+      message,
+      received: true
+    }, ...messages
+    ]);
+  });
 
   const getDynamicStyles = (message: Message, index: number) => {
     return {
@@ -31,12 +41,11 @@ export const ChatWindow = () : JSX.Element => {
   };
 
   const addMessage = (message: string) => {
-    sendMessage(message, socket);
-    setMessages([...messages, 
-      {
-        message,
-        received: false
-      }
+    sendMessage(socket, roomToken, message);
+    setMessages([{
+      message,
+      received: false
+    }, ...messages
     ]);
   };
 

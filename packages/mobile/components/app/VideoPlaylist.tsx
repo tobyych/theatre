@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, FlatList, TextInput, TouchableOpacity, Keyboard, StyleSheet, Image, Dimensions } from 'react-native';
 import { PlaylistItem } from '../../types';
 
@@ -11,16 +11,24 @@ import { Ionicons } from '@expo/vector-icons';
 
 import {getYoutubeMeta} from 'react-native-youtube-iframe';
 
+import { SocketContext } from '../../contexts/SocketContext';
+import { RoomContext } from '../../contexts/RoomContext';
+
 export const VideoPlaylist = (
   { sendVideoToScreen }: { sendVideoToScreen: React.Dispatch<React.SetStateAction<string>> }
 ): JSX.Element => {
   const [playlist, setPlaylist] = useState<PlaylistItem[]>([]);
   const [inputItem, setInputItem] = useState<string>('');
   const [playlistHasChanged, forcePlaylistToChange] = useState<boolean>(false);
+  const socket = useContext(SocketContext);
+  const { roomToken } = useContext(RoomContext);
+
+  socket.on('addToPlaylist', (videoId) => {
+    addItem(videoId);
+  });
 
   const addItem = async (videoId: string) => {
-    const metadata = await getYoutubeMeta(videoId);
-    const { title, author_name, thumbnail_url, thumbnail_height, thumbnail_width } = metadata;
+    const { title, author_name, thumbnail_url, thumbnail_height, thumbnail_width } = await getYoutubeMeta(videoId);
 
     setPlaylist([...playlist, {
       videoId,
@@ -79,7 +87,7 @@ export const VideoPlaylist = (
             onChangeText={setInputItem}
             placeholder='Input a YouTube video ID…'
             onSubmitEditing={() => {
-              addItem(inputItem);
+              socket.emit('addToPlaylist', roomToken, inputItem);
               Keyboard.dismiss();
               setInputItem('');
             }}
@@ -88,7 +96,7 @@ export const VideoPlaylist = (
         </View>
         <View style={styles.playlistItemAddButton}>
           <TouchableOpacity onPress={() => {
-            addItem(inputItem);
+            socket.emit('addToPlaylist', roomToken, inputItem);
             Keyboard.dismiss();
             setInputItem('');
           }}>
